@@ -1,0 +1,33 @@
+
+
+import requests
+from bs4 import BeautifulSoup
+import os
+
+# Zillow listing URL
+url = "https://www.zillow.com/homedetails/1234-Example-St-San-Francisco-CA-94109/12345678_zpid/"
+
+# Create a directory to store the images
+directory = "images"
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
+# Send a GET request to the Zillow listing URL
+response = requests.get(url)
+
+# Parse the HTML content of the response using BeautifulSoup
+soup = BeautifulSoup(response.content, "html.parser")
+
+# Find all the image tags in the HTML content
+image_tags = soup.find_all("img")
+
+# Download each image and save it to the directory
+for i, image_tag in enumerate(image_tags):
+    image_url = image_tag["src"]
+    image_name = f"{i}.jpg"
+    image_path = os.path.join(directory, image_name)
+    with open(image_path, "wb") as f:
+        f.write(requests.get(image_url).content)
+
+# Share the images on a GitHub Pages website
+# TODO: Upload the images to a GitHub repository and create a website using GitHub Pages
